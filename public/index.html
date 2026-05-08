@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>School Management App</title>
+    <style>
+      :root {
+        --bg: #0f172a;
+        --panel: #111827;
+        --card: #1f2937;
+        --text: #e5e7eb;
+        --muted: #9ca3af;
+        --primary: #60a5fa;
+        --primary-strong: #3b82f6;
+        --success: #22c55e;
+        --danger: #ef4444;
+        --border: #374151;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: radial-gradient(circle at top left, #1e293b, #020617 60%);
+        color: var(--text);
+        padding: 24px;
+      }
+
+      .shell {
+        max-width: 1100px;
+        margin: 0 auto;
+      }
+
+      .hero {
+        background: linear-gradient(135deg, #1d4ed8, #2563eb, #0ea5e9);
+        border-radius: 16px;
+        padding: 20px 22px;
+        box-shadow: 0 12px 30px rgba(37, 99, 235, 0.3);
+        margin-bottom: 16px;
+      }
+
+      .hero h1 {
+        margin: 0 0 8px;
+        font-size: 28px;
+      }
+
+      .hero p {
+        margin: 0;
+        color: #dbeafe;
+      }
+
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(120px, 1fr));
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+
+      .stat {
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 12px;
+        padding: 12px;
+      }
+
+      .stat .label {
+        display: block;
+        font-size: 12px;
+        color: #bfdbfe;
+      }
+
+      .stat .value {
+        font-size: 22px;
+        font-weight: 700;
+      }
+
+      .grid {
+        display: grid;
+        gap: 16px;
+        grid-template-columns: 1fr;
+      }
+
+      .card {
+        background: rgba(17, 24, 39, 0.9);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 16px;
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.2);
+      }
+
+      .card h3 {
+        margin: 0 0 12px;
+      }
+
+      form {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+
+      input {
+        width: 100%;
+        background: #0b1220;
+        color: var(--text);
+        border: 1px solid #334155;
+        border-radius: 10px;
+        padding: 11px 12px;
+        outline: none;
+      }
+
+      input:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2);
+      }
+
+      button {
+        border: 0;
+        border-radius: 10px;
+        padding: 11px 12px;
+        font-weight: 600;
+        cursor: pointer;
+        color: white;
+        background: linear-gradient(90deg, var(--primary), var(--primary-strong));
+      }
+
+      button:hover {
+        filter: brightness(1.08);
+      }
+
+      button:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+      }
+
+      .full {
+        grid-column: 1 / -1;
+      }
+
+      .muted {
+        color: var(--muted);
+        margin-top: 10px;
+      }
+
+      .table-wrap {
+        overflow-x: auto;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 760px;
+      }
+
+      thead {
+        background: #111827;
+      }
+
+      th,
+      td {
+        text-align: left;
+        padding: 10px 12px;
+        border-bottom: 1px solid #283548;
+      }
+
+      tbody tr:hover {
+        background: rgba(59, 130, 246, 0.08);
+      }
+
+      .badge {
+        display: inline-block;
+        padding: 3px 8px;
+        border-radius: 999px;
+        font-size: 12px;
+        background: rgba(34, 197, 94, 0.16);
+        color: #86efac;
+      }
+
+      .toast-container {
+        position: fixed;
+        right: 20px;
+        top: 20px;
+        display: grid;
+        gap: 10px;
+        z-index: 1000;
+      }
+
+      .toast {
+        min-width: 280px;
+        background: #0b1220;
+        border: 1px solid var(--border);
+        border-left: 5px solid var(--primary);
+        color: var(--text);
+        padding: 10px 12px;
+        border-radius: 8px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+      }
+
+      .toast.success {
+        border-left-color: var(--success);
+      }
+
+      .toast.error {
+        border-left-color: var(--danger);
+      }
+
+      @media (max-width: 760px) {
+        body {
+          padding: 14px;
+        }
+        form {
+          grid-template-columns: 1fr;
+        }
+        .stats {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <section class="hero">
+        <h1>School Management Dashboard</h1>
+        <p>Add schools and view nearest options from any user location.</p>
+      </section>
+
+      <section class="stats">
+        <div class="stat">
+          <span class="label">Total Schools</span>
+          <span class="value" id="totalSchools">0</span>
+        </div>
+        <div class="stat">
+          <span class="label">Nearest School</span>
+          <span class="value" id="nearestSchool">-</span>
+        </div>
+        <div class="stat">
+          <span class="label">Shortest Distance</span>
+          <span class="value" id="shortestDistance">-</span>
+        </div>
+      </section>
+
+      <div class="grid">
+        <div class="card">
+          <h3>Add School</h3>
+          <form id="addSchoolForm">
+            <input id="name" placeholder="School Name" required />
+            <input id="address" placeholder="Address" required />
+            <input id="schoolLatitude" type="number" step="any" placeholder="Latitude" required />
+            <input id="schoolLongitude" type="number" step="any" placeholder="Longitude" required />
+            <button class="full" id="addBtn" type="submit">Add School</button>
+          </form>
+          <div id="message" class="muted"></div>
+        </div>
+
+        <div class="card">
+          <h3>List Schools By Distance</h3>
+          <form id="listForm">
+            <input id="userLatitude" type="number" step="any" placeholder="Your Latitude" required />
+            <input id="userLongitude" type="number" step="any" placeholder="Your Longitude" required />
+            <button class="full" id="listBtn" type="submit">Fetch Sorted Schools</button>
+          </form>
+          <p class="muted">Nearest schools appear first.</p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th>Address</th>
+                  <th>Latitude</th>
+                  <th>Longitude</th>
+                  <th>Distance (km)</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="schoolsBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="toastContainer" class="toast-container"></div>
+
+    <script>
+      const messageEl = document.getElementById("message");
+      const schoolsBody = document.getElementById("schoolsBody");
+      const addBtn = document.getElementById("addBtn");
+      const listBtn = document.getElementById("listBtn");
+
+      function showToast(message, type = "success") {
+        const toast = document.createElement("div");
+        toast.className = `toast ${type}`;
+        toast.textContent = message;
+        document.getElementById("toastContainer").appendChild(toast);
+        setTimeout(() => toast.remove(), 3500);
+      }
+
+      function updateStats(list = []) {
+        document.getElementById("totalSchools").textContent = list.length;
+        if (list.length) {
+          document.getElementById("nearestSchool").textContent = list[0].name;
+          document.getElementById("shortestDistance").textContent = `${list[0].distanceKm} km`;
+        } else {
+          document.getElementById("nearestSchool").textContent = "-";
+          document.getElementById("shortestDistance").textContent = "-";
+        }
+      }
+
+      document.getElementById("addSchoolForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        addBtn.disabled = true;
+        addBtn.textContent = "Adding...";
+        messageEl.textContent = "Submitting school details...";
+
+        try {
+          const payload = {
+            name: document.getElementById("name").value.trim(),
+            address: document.getElementById("address").value.trim(),
+            latitude: Number(document.getElementById("schoolLatitude").value),
+            longitude: Number(document.getElementById("schoolLongitude").value),
+          };
+
+          const res = await fetch("/addSchool", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+
+          const data = await res.json();
+          if (!res.ok || !data.success) {
+            throw new Error(data.errors?.join(", ") || data.message || "Failed to add school");
+          }
+
+          messageEl.textContent = "School added. Now fetch list to see updated ranking.";
+          showToast("School added successfully", "success");
+          e.target.reset();
+        } catch (error) {
+          messageEl.textContent = error.message;
+          showToast(error.message, "error");
+        } finally {
+          addBtn.disabled = false;
+          addBtn.textContent = "Add School";
+        }
+      });
+
+      document.getElementById("listForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        listBtn.disabled = true;
+        listBtn.textContent = "Fetching...";
+        schoolsBody.innerHTML = "<tr><td colspan='7'>Loading schools...</td></tr>";
+
+        try {
+          const lat = document.getElementById("userLatitude").value;
+          const lon = document.getElementById("userLongitude").value;
+          const res = await fetch(`/listSchools?latitude=${encodeURIComponent(lat)}&longitude=${encodeURIComponent(lon)}`);
+          const data = await res.json();
+
+          if (!res.ok || !data.success) {
+            throw new Error(data.errors?.join(", ") || data.message || "Failed to fetch schools");
+          }
+
+          if (!data.data.length) {
+            schoolsBody.innerHTML = "<tr><td colspan='7'>No schools found.</td></tr>";
+            updateStats([]);
+            showToast("No schools found", "error");
+            return;
+          }
+
+          schoolsBody.innerHTML = "";
+          data.data.forEach((school, index) => {
+            const row = document.createElement("tr");
+            const status = index === 0 ? "<span class='badge'>Nearest</span>" : "-";
+            row.innerHTML = `
+              <td>${school.id}</td>
+              <td>${school.name}</td>
+              <td>${school.address}</td>
+              <td>${school.latitude}</td>
+              <td>${school.longitude}</td>
+              <td>${school.distanceKm}</td>
+              <td>${status}</td>
+            `;
+            schoolsBody.appendChild(row);
+          });
+
+          updateStats(data.data);
+          showToast("Schools loaded and sorted by distance", "success");
+        } catch (error) {
+          schoolsBody.innerHTML = `<tr><td colspan="7">Error: ${error.message}</td></tr>`;
+          updateStats([]);
+          showToast(error.message, "error");
+        } finally {
+          listBtn.disabled = false;
+          listBtn.textContent = "Fetch Sorted Schools";
+        }
+      });
+    </script>
+  </body>
+</html>
