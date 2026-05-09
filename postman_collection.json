@@ -38,7 +38,7 @@
         "url": {
           "raw": "{{baseUrl}}/listSchools?latitude=18.5204&longitude=73.8567",
           "host": [
-            "{{baseUrl}}"
+            "https://school-management-system-api.up.railway.app/"
           ],
           "path": [
             "listSchools"
