@@ -21,9 +21,9 @@
           "raw": "{\n  \"name\": \"Green Valley School\",\n  \"address\": \"123 Lake Road, Pune\",\n  \"latitude\": 18.5204,\n  \"longitude\": 73.8567\n}"
         },
         "url": {
-          "raw": "{{baseUrl}}/addSchool",
+          "raw": "https://school-management-system-api.up.railway.app/addSchool",
           "host": [
-            "{{baseUrl}}"
+            "https://school-management-system-api.up.railway.app/"
           ],
           "path": [
             "addSchool"
@@ -36,7 +36,7 @@
       "request": {
         "method": "GET",
         "url": {
-          "raw": "{{baseUrl}}/listSchools?latitude=18.5204&longitude=73.8567",
+          "raw": "https://school-management-system-api.up.railway.app/listSchools?latitude=18.5204&longitude=73.8567",
           "host": [
             "https://school-management-system-api.up.railway.app/"
           ],
@@ -59,7 +59,7 @@
   ],
   "variable": [
     {
-      "key": "baseUrl",
+      "key": "https://school-management-system-api.up.railway.app/",
       "value": "http://localhost:3000"
     }
   ]
